@@ -1,9 +1,13 @@
 package com.example.project3
 
+import android.annotation.SuppressLint
+import android.content.ContentValues.TAG
 import android.media.Rating
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.codepath.asynchttpclient.AsyncHttpClient
@@ -11,23 +15,30 @@ import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler
 import okhttp3.Headers
 import org.json.JSONException
 
-private const val TAG = "MainActivity"
-private const val NOW_PLAYING_URL = "https://api.themoviedb.org/3/movie/now_playing?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed"
-private const val RATING_TV = "https://api.themoviedb.org/3/rated/tv?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed"
 
+private fun AsyncHttpClient.get(jsonHttpResponseHandler: JsonHttpResponseHandler) {
 
+}
 
-class MainActivity : AppCompatActivity() {
+class DetailsActivity : AppCompatActivity() {
     private val movies = mutableListOf<Movie>()
     private lateinit var rvMovies: RecyclerView
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.detailsactivitylayout)
+
+        initializeViews()
+        fetchNowPlayingMovies()
+        val rvTitle = findViewById<TextView>(R.id.MovieTitle)
+        val rvRating = findViewById<TextView>(R.id.RatingMovie)
+        val rvMovieImg = findViewById<ImageView>(R.id.ImagePoster)
 
         initializeViews()
         fetchNowPlayingMovies()
     }
+
 
     private fun initializeViews() {
         rvMovies = findViewById(R.id.rvMovies)
@@ -35,14 +46,14 @@ class MainActivity : AppCompatActivity() {
 
         rvMovies.apply {
             adapter = movieAdapter
-            layoutManager = LinearLayoutManager(this@MainActivity)
+            layoutManager = LinearLayoutManager(this@DetailsActivity)
         }
     }
 
     private fun fetchNowPlayingMovies() {
         val client = AsyncHttpClient()
 
-        client.get(NOW_PLAYING_URL, object : JsonHttpResponseHandler() {
+        client.get(, object : JsonHttpResponseHandler() {
             override fun onFailure(statusCode: Int, headers: Headers?, response: String?, throwable: Throwable?) {
                 Log.e(TAG, "Request failed with code: $statusCode")
             }
@@ -61,4 +72,8 @@ class MainActivity : AppCompatActivity() {
             }
         })
     }
+}
+
+
+
 }
